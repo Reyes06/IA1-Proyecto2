@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <title>IA1 - Proyecto 2</title>
+</head>
+
+<body>
+
+    <h1>Proyecto 2 - Implementacion de libreria tytus.js</h1>
+
+    <h2>Paso 1: Carga del dataset</h2>
+    <p>Archivo CSV que se utilizará para entrenar y validar los algoritmos de inteligencia artificial</p>
+    <input type="file" id="csvFile" accept=".csv">
+
+    <br><br>
+
+    <h2>Paso 2: Selección del modelo de inteligencia artificial</h2>
+    <p>Elección del algoritmo de inteligencia artificial que se hará uso, se encuentran disponibles todos los que
+        proporciona la libreria tytus.js:</p>
+    <ul>
+        <li>Linear Regression</li>
+        <li>Polynomial Regression</li>
+        <li>Decision Trees</li>
+        <li>Naive Bayes</li>
+        <li>Neural Networks</li>
+        <li>K-means</li>
+        <li>K-nearest Neighbor</li>
+    </ul>
+
+    <label for="model">Modelo a utilizar: </label>
+    <select id="model" onchange="modelSelection()">
+        <option value="empty">---</option>
+        <option value="linear">Linear Regression</option>
+        <option value="polynomial">Polynomial Regression</option>
+        <option value="decision">Decision Trees</option>
+        <option value="native">Naive Bayes</option>
+        <option value="neural">Neural Networks</option>
+        <option value="kmeans">K-means</option>
+        <option value="knearest">K-nearest Neighbor</option>
+    </select>
+
+    <h2>Paso 3: Parametrización del modelo</h2>
+    <p>Campos que se necesitan llenar para parametrizar el comportamiento del modelo</p>
+
+    <h3>Parametros generales</h3>
+
+    <div>
+        <p>Porcentaje de los datos que será utilizada para el entrenamiento y porcentaje que será utilizada para las
+            pruebas de las predicciones</p>
+        <datalist id="marks">
+            <option value="0" label="0%"></option>
+            <option value="10"></option>
+            <option value="20"></option>
+            <option value="30"></option>
+            <option value="40"></option>
+            <option value="50" label="50%"></option>
+            <option value="60"></option>
+            <option value="70"></option>
+            <option value="80"></option>
+            <option value="90"></option>
+            <option value="100" label="100%"></option>
+        </datalist>
+
+        <label for="data-percent">Train data</label>
+        <b><output id="train-percent" for="range"></output>%</b>
+        <input type="range" list="marks" value="80" />
+        <b><output id="test-percent" for="range"></output>%</b>
+        <label for="data-percent">Test data</label>
+    </div>
+
+    <h3>Parametros especificos del modelo</h3>
+
+    <div id="error-parameters">
+        <p>Porfavor cargar un archivo CSV</p>
+    </div>
+
+    <div id="linear-parameters">
+        <div>
+            <label for="x">Columna de la variable independiente (X)</label>
+            <select id="x">
+            </select>
+        </div>
+        <div>
+            <label for="y">Columna de la variable dependiente (Y)</label>
+            <select id="y">
+            </select>
+        </div>
+    </div>
+
+    <div id="polynomial-parameters">
+    </div>
+
+    <div id="decision-parameters">
+    </div>
+
+    <div id="native-parameters">
+    </div>
+
+    <div id="neural-parameters">
+    </div>
+
+    <div id="kmeans-parameters">
+    </div>
+
+    <div id="knearest-parameters">
+    </div>
+
+
+    <h2>Paso 4: Ejecucion del modelo</h2>
+    <p>Ejecución del modelo según la configuración previamente establecida, tomando como base el archivo de entrada</p>
+
+    <button onclick="trainModel()">Entrenar</button>
+    <button onclick="predictModel()">Predecir</button>
+    <button onclick="showResultChart()">Mostrar graficas</button>
+
+    <h2>Area de resultados:</h2>
+
+    <div id="result"></div>
+
+    <h2>Area de graficas:</h2>
+
+    <div>
+        <label for="trained-chart">Datos utilizados para el entrenamiento</label>
+        <div id="trained-chart" style="width: 900px; height: 500px;"></div>
+        <label for="predicted-chart">Datos predecidos por el modelo</label>
+        <div id="predicted-chart" style="width: 900px; height: 500px;"></div>
+    </div>
+
+
+    <div style="display: none;">
+        <div id="salida"></div>
+        <div id="salida1"></div>
+        <div id="salida2"></div>
+        <div id="salida3"></div>
+        <div id="salida4"></div>
+    </div>
+
+
+    <script type="text/javascript" src="./tytus.js"></script>
+    <script>
+        let csvContent = "";
+        let csvController;
+        let linearRegressionModel;
+
+        function processCSV() {
+            const action = document.getElementById("action").value;
+            const resultDiv = document.getElementById("result");
+
+            if (!csvContent) {
+                resultDiv.innerText = "Por favor, carga un archivo CSV primero.";
+                return;
+            }
+
+            switch (action) {
+                case "mostrar":
+                    resultDiv.innerText = csvContent;
+                    break;
+                case "filtrar":
+                    resultDiv.innerText = "Función de filtrado aún no implementada.";
+                    break;
+                case "calcular":
+                    resultDiv.innerText = "Función de cálculo aún no implementada.";
+                    break;
+                default:
+                    resultDiv.innerText = "Selecciona una acción válida.";
+            }
+
+            alert("123")
+        }
+
+        function trainModel() {
+            const model = document.getElementById("model").value;
+            const trainPercent = document.getElementById("train-percent").value;
+            switch (model) {
+                case "linear":
+                    const xColumn = document.getElementById("x").value;
+                    const yColumn = document.getElementById("y").value;
+                    const xData = csvController.getNumberDataFromColumn(xColumn);
+                    const yData = csvController.getNumberDataFromColumn(yColumn);
+                    const maxTrainingIndex = Math.floor(xData.length * trainPercent / 100);
+                    const trainingXData = xData.slice(0, maxTrainingIndex);
+                    const trainingYData = yData.slice(0, maxTrainingIndex);
+
+                    linearRegressionModel = new LinearRegressionAdapter();
+                    linearRegressionModel.train(trainingXData, trainingYData);
+                    document.getElementById("result").innerText =
+                        "Modelo entrenado con los siguientes datos:\n"
+                        + "XData: [" + trainingXData + "]\n"
+                        + "YData: [" + trainingYData + "]";
+                    break;
+                case "polynomial":
+                    break;
+                case "decision":
+                    break;
+                case "native":
+                    break;
+                case "neural":
+                    break;
+                case "kmeans":
+                    break;
+                case "knearest":
+                    break;
+            }
+        }
+
+        function predictModel() {
+            const model = document.getElementById("model").value;
+            const trainPercent = document.getElementById("train-percent").value;
+            switch (model) {
+                case "linear":
+                    const xColumn = document.getElementById("x").value;
+                    const xData = csvController.getNumberDataFromColumn(xColumn);
+                    if (!linearRegressionModel) {
+                        alert('Modelo no entrenado previamente');
+                    }
+                    let maxTrainingIndex = Math.floor(xData.length * trainPercent / 100);
+                    const predictXData = xData.slice(maxTrainingIndex);
+                    const yPredicted = linearRegressionModel.predict(predictXData);
+                    document.getElementById("result").innerText =
+                        "Prediccion realizada:\n"
+                        + "provided  XData: [" + predictXData + "]\n"
+                        + "predicted YData: [" + yPredicted + "]";
+                    break;
+                case "polynomial":
+                    break;
+                case "decision":
+                    break;
+                case "native":
+                    break;
+                case "neural":
+                    break;
+                case "kmeans":
+                    break;
+                case "knearest":
+                    break;
+            }
+        }
+
+        function showResultChart() {
+            const model = document.getElementById("model").value;
+            const trainPercent = document.getElementById("train-percent").value;
+            switch (model) {
+                case "linear":
+                    const xColumn = document.getElementById("x").value;
+                    const yColumn = document.getElementById("y").value;
+                    const xData = csvController.getNumberDataFromColumn(xColumn);
+                    const yData = csvController.getNumberDataFromColumn(yColumn);
+
+                    if (!linearRegressionModel) {
+                        alert('Modelo no entrenado previamente');
+                    }
+                    if (!linearRegressionModel.predictXData || !linearRegressionModel.predictedYData) {
+                        alert('No se ha realizado predicciones sobre el modelo previamente');
+                    }
+                    configureChart('trained-chart', 'X', xData, 'Y', yData)
+                    configureChart('predicted-chart', 'X', linearRegressionModel.predictXData, 'Y', linearRegressionModel.predictedYData)
+                    break;
+                case "polynomial":
+                    break;
+                case "decision":
+                    break;
+                case "native":
+                    break;
+                case "neural":
+                    break;
+                case "kmeans":
+                    break;
+                case "knearest":
+                    break;
+            }
+        }
+
+        //----------------------------------------------
+
+        class CsvController {
+
+            constructor(csvContent) {
+                this.csvContent = csvContent
+            }
+
+            getHeaders() {
+                return this.csvContent.split('\n')[0].trim().split(';');
+            }
+
+            getNumberDataFromColumn(columnName) {
+                const headers = this.getHeaders();
+                let index = 0;
+                for (index = 0; index < headers.length; index++) {
+                    if (headers[index] === columnName) {
+                        break;
+                    }
+                }
+                if (index >= headers.length) {
+                    return null;
+                }
+
+                const rows = this.csvContent.split('\n');
+                let tempArray = [];
+                let firstRow = true;
+                rows.forEach((row) => {
+                    if (firstRow) {
+                        firstRow = false;
+                        return;
+                    }
+                    const element = row.trim().split(';')[index];
+                    element !== '' ? tempArray.push(Number(element)) : null;
+                })
+                return tempArray;
+            }
+
+        }
+
+        //----------------------------------------------
+
+        class LinearRegressionAdapter {
+
+            constructor() {
+                this.linearRegression = new LinearRegression();
+                this.predictXData = null;
+                this.predictedYData = null;
+            }
+
+            train(trainingXData, trainingYData) {
+                console.log("trainingXData: ");
+                console.log(trainingXData);
+                console.log("trainingYData: ");
+                console.log(trainingYData);
+                this.linearRegression.fit(trainingXData, trainingYData);
+            }
+
+            predict(predictXData) {
+
+                console.log("predictXData: ");
+                console.log(predictXData);
+                this.predictXData = predictXData;
+                this.predictedYData = this.linearRegression.predict(predictXData);
+                return this.predictedYData;
+            }
+
+
+        }
+
+        //----------------------------------------------
+
+        function modelSelection() {
+            hideSpecificParameters();
+            if (!csvContent) {
+                document.getElementById("error-parameters").style.display = "block";
+            } else {
+                const model = document.getElementById("model").value;
+                switch (model) {
+                    case "linear":
+                        const headers = csvController.getHeaders();
+                        chargeHeadersOnSelectButtons(headers);
+                        document.getElementById("linear-parameters").style.display = "block";
+                        break;
+                    case "polynomial":
+                        document.getElementById("polynomial-parameters").style.display = "block";
+                        break;
+                    case "decision":
+                        document.getElementById("decision-parameters").style.display = "block";
+                        break;
+                    case "native":
+                        document.getElementById("native-parameters").style.display = "block";
+                        break;
+                    case "neural":
+                        document.getElementById("neural-parameters").style.display = "block";
+                        break;
+                    case "kmeans":
+                        document.getElementById("kmeans-parameters").style.display = "block";
+                        break;
+                    case "knearest":
+                        document.getElementById("knearest-parameters").style.display = "block";
+                        break;
+                }
+            }
+        }
+
+        function configureChart(chartId, xTitle, xData, yTitle, yData) {
+            google.charts.load('current', { 'packages': ['corechart'] });
+            google.charts.setOnLoadCallback(drawChart);
+            const information = joinTwoArrays(xTitle, xData, yTitle, yData)
+            console.log("Chart configuration:");
+            console.log(information)
+
+            function drawChart() {
+                var data = google.visualization.arrayToDataTable(information);
+                var options = {
+                    series: { 1: { type: 'line' } }
+                };
+                var chart = new google.visualization.ComboChart(document.getElementById(chartId));
+                chart.draw(data, options);
+            }
+        }
+
+        function chargeHeadersOnSelectButtons(csvHeaders) {
+            const ySelectItem = document.getElementById("y");
+
+            csvHeaders.forEach((header) => {
+                let option = document.createElement("option");
+                option.value = header;
+                option.text = header;
+                ySelectItem.add(option);
+            })
+
+            const xSelectItem = document.getElementById("x");
+
+            csvHeaders.forEach((header) => {
+                let option = document.createElement("option");
+                option.value = header;
+                option.text = header;
+                xSelectItem.add(option);
+            })
+        }
+
+        function hideSpecificParameters() {
+            document.getElementById("error-parameters").style.display = "none";
+            document.getElementById("linear-parameters").style.display = "none";
+            document.getElementById("polynomial-parameters").style.display = "none";
+            document.getElementById("decision-parameters").style.display = "none";
+            document.getElementById("native-parameters").style.display = "none";
+            document.getElementById("neural-parameters").style.display = "none";
+            document.getElementById("kmeans-parameters").style.display = "none";
+            document.getElementById("knearest-parameters").style.display = "none";
+        }
+
+        function configureSlider() {
+            const range = document.querySelector('input[type=range]');
+            const trainPercent = document.getElementById('train-percent');
+            const testPercent = document.getElementById('test-percent');
+            trainPercent.value = range.value;
+            testPercent.value = 100 - range.value;
+
+            range.oninput = function () {
+                trainPercent.value = range.value;
+                testPercent.value = 100 - range.value;
+            };
+        }
+
+        function configureFileListener() {
+            document.getElementById("csvFile").addEventListener("change", function (event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        csvContent = e.target.result;
+                        csvController = new CsvController(csvContent);
+                        document.getElementById("result").innerText = "Archivo cargado correctamente.";
+                        modelSelection();
+                    };
+                    reader.readAsText(file);
+                }
+            });
+        }
+
+        function joinTwoArrays() {
+            var t = [];
+            if (4 == arguments.length) {
+                t.push([arguments[0], arguments[2]]);
+                for (var e = 0; e < arguments[1].length; e++)
+                    t.push([arguments[1][e], arguments[3][e]])
+            }
+            return t
+        }
+
+        hideSpecificParameters();
+        configureSlider();
+        configureFileListener();
+
+
+    </script>
+</body>
+
+</html>
