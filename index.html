@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis-network.min.js"></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <title>IA1 - Proyecto 2</title>
 </head>
@@ -19,16 +20,15 @@
     <br><br>
 
     <h2>Paso 2: Selección del modelo de inteligencia artificial</h2>
-    <p>Elección del algoritmo de inteligencia artificial que se hará uso, se encuentran disponibles todos los que
+    <p>Elección del algoritmo de inteligencia artificial que se hará uso, se encuentran disponibles los principales que
         proporciona la libreria tytus.js:</p>
     <ul>
-        <li>Linear Regression</li>
-        <li>Polynomial Regression</li>
-        <li>Decision Trees</li>
-        <li>Naive Bayes</li>
-        <li>Neural Networks</li>
-        <li>K-means</li>
-        <li>K-nearest Neighbor</li>
+        <li>Linear Regression --------- Tendencias</li>
+        <li>Polynomial Regression --- Tendencias</li>
+        <li>Naive Bayes ---------------- Predicciones</li>
+        <li>Neural Networks ---------- Predicciones</li>
+        <li>Decision Trees ------------- Patrones</li>
+        <li>K-means -------------------- Patrones</li>
     </ul>
 
     <label for="model">Modelo a utilizar: </label>
@@ -36,11 +36,10 @@
         <option value="empty">---</option>
         <option value="linear">Linear Regression</option>
         <option value="polynomial">Polynomial Regression</option>
-        <option value="decision">Decision Trees</option>
-        <option value="native">Naive Bayes</option>
+        <option value="bayes">Naive Bayes</option>
         <option value="neural">Neural Networks</option>
+        <option value="decision">Decision Trees</option>
         <option value="kmeans">K-means</option>
-        <option value="knearest">K-nearest Neighbor</option>
     </select>
 
     <h2>Paso 3: Parametrización del modelo</h2>
@@ -78,7 +77,7 @@
         <p>Porfavor cargar un archivo CSV</p>
     </div>
 
-    <div id="linear-parameters">
+    <div id="regression-parameters">
         <div>
             <label for="x">Columna de la variable independiente (X)</label>
             <select id="x">
@@ -91,19 +90,108 @@
         </div>
     </div>
 
-    <div id="polynomial-parameters">
-    </div>
-
     <div id="decision-parameters">
+
+        <p>Es necesario indicar cuales columnas del CSV son las que almacenan los atributos que serán tomados en cuenta
+            para entrenar el algoritmo</p>
+
+        <label for="decision-options">Seleccione una columna</label>
+        <select id="decision-options">
+        </select>
+
+        <button onclick="addAtributeToTable('decision')">Agregar columna</button>
+
+        <table id="decision-table" border="block">
+            <thead>
+                <tr>
+                    <th>Atributos del dataset</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
     </div>
 
-    <div id="native-parameters">
+    <div id="bayes-parameters">
+        <p>Es necesario indicar cuales columnas del CSV son las que almacenan los atributos que serán tomados en cuenta
+            para entrenar el algoritmo</p>
+
+        <label for="bayes-options">Seleccione una columna</label>
+        <select id="bayes-options">
+        </select>
+
+        <button onclick="addAtributeToTable('bayes')">Agregar columna</button>
+        <button onclick="addDefaultValuesToTable('bayes')">Agregar valores por defecto</button>
+
+        <table id="bayes-table" border="block">
+            <thead>
+                <tr>
+                    <th>Atributos del dataset</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+
+        <p>¿Qué variable se desea predecir?</p>
+        <select id="bayes-variable">
+        </select>
+
+        <p>¿Bajo de qué condiciones se desea predecir la variable?</p>
+        <table id="bayes-variable-values" border="block">
+            <thead>
+                <tr>
+                    <th>Variable</th>
+                    <th>Valor</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
     </div>
 
     <div id="neural-parameters">
+
+        <div>
+            <label for="neural-prediction">¿Que tipo de prediccion desea realizar?</label>
+            <select id="neural-prediction">
+                <option id="higher">¿Cual elemento es el mayor?</option>
+                <option id="lower">¿Cual elemento es el menor?</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="neural-A">Elemento A:</label>
+            <input id="neural-A" type="number" />
+        </div>
+
+        <div>
+            <label for="neural-B">Elemento B:</label>
+            <input id="neural-B" type="number" />
+        </div>
     </div>
 
     <div id="kmeans-parameters">
+
+        <p>Es necesario indicar cuales columnas del CSV son las que almacenan los atributos que serán tomados en cuenta
+            para entrenar el algoritmo</p>
+
+        <div>
+            <label for="kmeans-x-options">Referencia en el eje X del punto</label>
+            <select id="kmeans-x-options">
+            </select>
+        </div>
+
+        <div>
+            <label for="kmeans-y-options">Referencia en el eje Y del punto</label>
+            <select id="kmeans-y-options">
+            </select>
+        </div>
+
+        <div>
+            <label for="kmeans-y-options">Cantidad de centroides a calcular</label>
+            <input id="kmeans-centroides" type="number" />
+        </div>
     </div>
 
     <div id="knearest-parameters">
@@ -121,15 +209,27 @@
 
     <div id="result"></div>
 
-    <h2>Area de graficas:</h2>
+    <div id="graphics">
+        <h2>Area de graficas:</h2>
 
-    <div>
-        <label for="trained-chart">Datos utilizados para el entrenamiento</label>
-        <div id="trained-chart" style="width: 900px; height: 500px;"></div>
-        <label for="predicted-chart">Datos predecidos por el modelo</label>
-        <div id="predicted-chart" style="width: 900px; height: 500px;"></div>
+        <div id="training-charts">
+            <label for="trained-chart">Datos utilizados para el entrenamiento</label>
+            <div id="trained-chart" style="width: 900px; height: 500px;"></div>
+        </div>
+        <div id="prediction-charts">
+            <label for="predicted-chart">Datos predecidos por el modelo</label>
+            <div id="predicted-chart" style="width: 900px; height: 500px;"></div>
+        </div>
+        <div id="tree-charts" style="display: none;">
+            <label for="tree">Arbol de decision predecido</label>
+            <div style="width: 100%; height: 500px; border: 2px dashed red; border-radius: 10px;" id="tree"></div>
+        </div>
     </div>
 
+    <div id="canvas" style="display: none;">
+        <h2>Area de canvas:</h2>
+        <canvas id="kmeans-canva" width="600" height="600"></canvas>
+    </div>
 
     <div style="display: none;">
         <div id="salida"></div>
@@ -145,62 +245,109 @@
         let csvContent = "";
         let csvController;
         let linearRegressionModel;
-
-        function processCSV() {
-            const action = document.getElementById("action").value;
-            const resultDiv = document.getElementById("result");
-
-            if (!csvContent) {
-                resultDiv.innerText = "Por favor, carga un archivo CSV primero.";
-                return;
-            }
-
-            switch (action) {
-                case "mostrar":
-                    resultDiv.innerText = csvContent;
-                    break;
-                case "filtrar":
-                    resultDiv.innerText = "Función de filtrado aún no implementada.";
-                    break;
-                case "calcular":
-                    resultDiv.innerText = "Función de cálculo aún no implementada.";
-                    break;
-                default:
-                    resultDiv.innerText = "Selecciona una acción válida.";
-            }
-
-            alert("123")
-        }
+        let twoGradePolynomialRegression;
+        let threeGradePolynomialRegression;
+        let fourGradePolynomialRegression;
+        let decisionTreeModel;
+        let naiveBayesModel;
+        let neuralNetworkModel;
+        let g8MeansModel;
 
         function trainModel() {
             const model = document.getElementById("model").value;
             const trainPercent = document.getElementById("train-percent").value;
             switch (model) {
                 case "linear":
-                    const xColumn = document.getElementById("x").value;
-                    const yColumn = document.getElementById("y").value;
-                    const xData = csvController.getNumberDataFromColumn(xColumn);
-                    const yData = csvController.getNumberDataFromColumn(yColumn);
-                    const maxTrainingIndex = Math.floor(xData.length * trainPercent / 100);
-                    const trainingXData = xData.slice(0, maxTrainingIndex);
-                    const trainingYData = yData.slice(0, maxTrainingIndex);
+                    {
+                        const xColumn = document.getElementById("x").value;
+                        const yColumn = document.getElementById("y").value;
+                        const xData = csvController.getNumberDataFromColumn(xColumn);
+                        const yData = csvController.getNumberDataFromColumn(yColumn);
+                        const maxTrainingIndex = Math.floor(xData.length * trainPercent / 100);
+                        const trainingXData = xData.slice(0, maxTrainingIndex);
+                        const trainingYData = yData.slice(0, maxTrainingIndex);
 
-                    linearRegressionModel = new LinearRegressionAdapter();
-                    linearRegressionModel.train(trainingXData, trainingYData);
-                    document.getElementById("result").innerText =
-                        "Modelo entrenado con los siguientes datos:\n"
-                        + "XData: [" + trainingXData + "]\n"
-                        + "YData: [" + trainingYData + "]";
+                        linearRegressionModel = new LinearRegressionAdapter();
+
+                        linearRegressionModel.train(trainingXData, trainingYData);
+
+                        document.getElementById("result").innerText =
+                            "Modelo entrenado con los siguientes datos:\n"
+                            + "XData: [" + trainingXData + "]\n"
+                            + "YData: [" + trainingYData + "]";
+                    }
                     break;
                 case "polynomial":
+                    {
+                        const xColumn = document.getElementById("x").value;
+                        const yColumn = document.getElementById("y").value;
+                        const xData = csvController.getNumberDataFromColumn(xColumn);
+                        const yData = csvController.getNumberDataFromColumn(yColumn);
+                        const maxTrainingIndex = Math.floor(xData.length * trainPercent / 100);
+                        const trainingXData = xData.slice(0, maxTrainingIndex);
+                        const trainingYData = yData.slice(0, maxTrainingIndex);
+
+                        twoGradePolynomialRegression = new PolynomialRegressionAdapter();
+                        threeGradePolynomialRegression = new PolynomialRegressionAdapter();
+                        fourGradePolynomialRegression = new PolynomialRegressionAdapter();
+
+                        twoGradePolynomialRegression.trainTwoGradeRegression(trainingXData, trainingYData);
+                        threeGradePolynomialRegression.trainThreeGradeRegression(trainingXData, trainingYData);
+                        fourGradePolynomialRegression.trainFourGradeRegression(trainingXData, trainingYData);
+
+                        document.getElementById("result").innerText =
+                            "Modelo entrenado en base a polinomios de 2do, 3er y 4to grado con los siguientes datos:\n"
+                            + "XData: [" + trainingXData + "]\n"
+                            + "YData: [" + trainingYData + "]";
+                    }
                     break;
                 case "decision":
+                    {
+                        const celdas = document.getElementById("decision-table").getElementsByTagName("tbody")[0].getElementsByTagName("td");
+                        let csvColumns = [];
+                        let csvColumnNames = []
+                        for (let i = 0; i < celdas.length; i++) {
+                            const csvColumn = csvController.getStringDataFromColumn(celdas[i].textContent);
+                            const maxTrainingIndex = Math.floor(csvColumn.length * trainPercent / 100);
+                            const filteredCsvColumnValues = csvColumn.slice(0, maxTrainingIndex);
+                            csvColumns.push(filteredCsvColumnValues);
+                            csvColumnNames.push(celdas[i].textContent);
+                        }
+
+                        let trainingCsvData = [];
+                        for (let i = 0; i < csvColumns.length; i++) {
+                            trainingCsvData.push(csvColumnNames[i]);
+                            trainingCsvData.push(csvColumns[i]);
+                        }
+
+                        let trainingDataSet = joinNArrays(...trainingCsvData)
+                        decisionTreeModel = new DecisionTreeID3Adapter(trainingDataSet);
+                        decisionTreeModel.train();
+
+                        let txt = "[\n";
+                        for (let i = 0; i < trainingDataSet.length; i++) {
+                            txt += "   [ " + trainingDataSet[i] + "],\n"
+                        }
+                        txt += "]";
+
+                        document.getElementById("result").innerText =
+                            "Modelo entrenado con el siguiente dataset:\n" + txt;
+                    }
                     break;
-                case "native":
+                case "bayes":
+                    {
+                        alert('Este modelo no necesita fase de entrenamiento')
+                    }
                     break;
                 case "neural":
+                    {
+                        alert('Este modelo no necesita fase de entrenamiento')
+                    }
                     break;
                 case "kmeans":
+                    {
+                        alert('Este modelo no necesita fase de entrenamiento')
+                    }
                     break;
                 case "knearest":
                     break;
@@ -212,28 +359,186 @@
             const trainPercent = document.getElementById("train-percent").value;
             switch (model) {
                 case "linear":
-                    const xColumn = document.getElementById("x").value;
-                    const xData = csvController.getNumberDataFromColumn(xColumn);
-                    if (!linearRegressionModel) {
-                        alert('Modelo no entrenado previamente');
+                    {
+                        const xColumn = document.getElementById("x").value;
+                        const xData = csvController.getNumberDataFromColumn(xColumn);
+                        if (!linearRegressionModel) {
+                            alert('Modelo no entrenado previamente');
+                        }
+                        let maxTrainingIndex = Math.floor(xData.length * trainPercent / 100);
+                        const predictXData = xData.slice(maxTrainingIndex);
+                        const yPredicted = linearRegressionModel.predict(predictXData);
+                        document.getElementById("result").innerText =
+                            "Prediccion realizada:\n"
+                            + "provided  XData: [" + predictXData + "]\n"
+                            + "predicted YData: [" + yPredicted + "]";
                     }
-                    let maxTrainingIndex = Math.floor(xData.length * trainPercent / 100);
-                    const predictXData = xData.slice(maxTrainingIndex);
-                    const yPredicted = linearRegressionModel.predict(predictXData);
-                    document.getElementById("result").innerText =
-                        "Prediccion realizada:\n"
-                        + "provided  XData: [" + predictXData + "]\n"
-                        + "predicted YData: [" + yPredicted + "]";
                     break;
                 case "polynomial":
+                    {
+                        const xColumn = document.getElementById("x").value;
+                        const xData = csvController.getNumberDataFromColumn(xColumn);
+                        if (!twoGradePolynomialRegression) {
+                            alert('Modelo no entrenado previamente');
+                        }
+                        let maxTrainingIndex = Math.floor(xData.length * trainPercent / 100);
+                        const predictXData = xData.slice(maxTrainingIndex);
+
+                        const yTwoPredicted = twoGradePolynomialRegression.predict(predictXData);
+                        const yThreePredicted = threeGradePolynomialRegression.predict(predictXData);
+                        const yFourPredicted = fourGradePolynomialRegression.predict(predictXData);
+
+                        document.getElementById("result").innerText =
+                            "Prediccion realizada:\n"
+                            + "provided  XData: [" + predictXData + "]\n"
+                            + "predicted 2th grade YData: [" + yTwoPredicted + "]\n"
+                            + "predicted 3th grade YData: [" + yThreePredicted + "]\n"
+                            + "predicted 4th grade YData: [" + yFourPredicted + "]";
+                    }
                     break;
                 case "decision":
+                    {
+                        if (!decisionTreeModel) {
+                            alert('Modelo no entrenado previamente');
+                        }
+                        const celdas = document.getElementById("decision-table").getElementsByTagName("tbody")[0].getElementsByTagName("td");
+                        let csvColumns = [];
+                        let csvColumnNames = []
+                        for (let i = 0; i < celdas.length; i++) {
+                            const csvColumn = csvController.getStringDataFromColumn(celdas[i].textContent);
+                            const maxTrainingIndex = Math.floor(csvColumn.length * trainPercent / 100);
+                            const filteredCsvColumnValues = csvColumn.slice(maxTrainingIndex);
+                            csvColumns.push(filteredCsvColumnValues);
+                            csvColumnNames.push(celdas[i].textContent);
+                        }
+
+                        let predictingCsvData = [];
+                        for (let i = 0; i < csvColumns.length; i++) {
+                            predictingCsvData.push(csvColumnNames[i]);
+                            predictingCsvData.push(csvColumns[i]);
+                        }
+
+                        let predictingDataSet = joinNArrays(...predictingCsvData)
+                        let predictedResult = decisionTreeModel.predict(predictingDataSet);
+
+                        let txtPredicting = "[\n";
+                        for (let i = 0; i < predictingDataSet.length; i++) {
+                            txtPredicting += "   [ " + predictingDataSet[i] + "],\n"
+                        }
+                        txtPredicting += "]";
+
+                        document.getElementById("result").innerText =
+                            "Prediccion realizada:\n"
+                            + "provided dataset: " + txtPredicting + "\n"
+                            + "predicted response: " + JSON.stringify(predictedResult);
+                    }
                     break;
-                case "native":
+                case "bayes":
+                    {
+                        const celdas = document.getElementById("bayes-table").getElementsByTagName("tbody")[0].getElementsByTagName("td");
+                        let csvColumns = [];
+                        let csvColumnNames = []
+                        for (let i = 0; i < celdas.length; i++) {
+                            const csvColumn = csvController.getStringDataFromColumn(celdas[i].textContent);
+                            csvColumns.push(csvColumn);
+                            csvColumnNames.push(celdas[i].textContent);
+                        }
+
+                        naiveBayesModel = new NaiveBayesAdapter();
+
+                        for (let i = 0; i < csvColumns.length; i++) {
+                            naiveBayesModel.insertCause(csvColumnNames[i], csvColumns[i]);
+                        }
+
+                        let predictionData = []
+                        const modelVariables = document.getElementsByClassName('select-variables-bayes');
+                        const variableValues = document.getElementsByClassName('select-values-bayes');
+
+                        for (let i = 0; i < modelVariables.length; i++) {
+                            const name = modelVariables[i].innerText;
+                            const value = variableValues[i].value;
+                            predictionData.push([name, value])
+                        }
+
+                        console.log(predictionData)
+
+                        const predictionVariable = document.getElementById('bayes-variable').value;
+                        let predictionResult = naiveBayesModel.predict(predictionVariable, predictionData);
+                        console.log('Prediction result:');
+                        console.log(predictionResult);
+
+                        document.getElementById("result").innerHTML =
+                            "El valor de <b>" + predictionVariable + "</b> sera <b>" + predictionResult[0] + "</b> con una probabilidad del <b>" + predictionResult[1] + "</b>";
+                    }
                     break;
                 case "neural":
+                    {
+                        const action = document.getElementById('neural-prediction').value;
+                        neuralNetworkModel = new NeuralNetworkAdapter();
+                        switch (action) {
+                            case '¿Cual elemento es el mayor?':
+                                neuralNetworkModel.trainHigherElementsCase();
+                                break;
+                            case '¿Cual elemento es el menor?':
+                                neuralNetworkModel.trainLowerElementsCase();
+                                break;
+                        }
+                        const elementA = document.getElementById('neural-A').value;
+                        const elementB = document.getElementById('neural-B').value;
+                        const predictedResult = neuralNetworkModel.predict(elementA, elementB);
+                        console.log(predictedResult)
+
+                        switch (action) {
+                            case '¿Cual elemento es el mayor?':
+                                if (predictedResult[0] > 0.5) {
+                                    document.getElementById("result").innerHTML =
+                                        "El elemento A es el mayor con una probabilidad del <b>" + (predictedResult[0] * 100) + "% </b>";
+                                } else {
+                                    document.getElementById("result").innerHTML =
+                                        "El elemento B es el mayor con una brobabilidad del <b>" + (predictedResult[1] * 100) + "% </b>";
+                                }
+                                break;
+                            case '¿Cual elemento es el menor?':
+                                if (predictedResult[0] > 0.5) {
+                                    document.getElementById("result").innerHTML =
+                                        "El elemento A es el menor con una probabilidad del <b>" + (predictedResult[0] * 100) + "% </b>";
+                                } else {
+                                    document.getElementById("result").innerHTML =
+                                        "El elemento B es el menor con una brobabilidad del <b>" + (predictedResult[1] * 100) + "% </b>";
+                                }
+                                break;
+                        }
+                    }
                     break;
                 case "kmeans":
+                    {
+                        const xPoint = document.getElementById('kmeans-x-options').value;
+                        const yPoint = document.getElementById('kmeans-y-options').value;
+                        const xColumnValues = csvController.getNumberDataFromColumn(xPoint);
+                        const yColumnValues = csvController.getNumberDataFromColumn(yPoint);
+
+                        const trainingDataset = [];
+                        for (let i = 0; i < xColumnValues.length; i++) {
+                            trainingDataset.push([xColumnValues[i], yColumnValues[i]]);
+                        }
+
+                        const htmlCanvaElement = document.getElementById('kmeans-canva');
+                        const centroidesNumber = document.getElementById('kmeans-centroides').value;
+
+                        g8MeansModel = new G8_KmeansAdapter(htmlCanvaElement, trainingDataset, centroidesNumber);
+                        const means = g8MeansModel.means();
+
+                        let txtResult = '';
+                        for (let i = 0; i < means.length; i++) {
+                            txtResult += "---> Centroide cluster: [" + means[i] + "]\n"
+                        }
+
+                        document.getElementById("result").innerText =
+                            "Dataset utilizado:\n" + JSON.stringify(trainingDataset) + "\n" +
+                            "Numero de centroides a proyectar: " + centroidesNumber + "\n" +
+                            "Resultado:\n" +
+                            txtResult;
+                    }
                     break;
                 case "knearest":
                     break;
@@ -245,27 +550,88 @@
             const trainPercent = document.getElementById("train-percent").value;
             switch (model) {
                 case "linear":
-                    const xColumn = document.getElementById("x").value;
-                    const yColumn = document.getElementById("y").value;
-                    const xData = csvController.getNumberDataFromColumn(xColumn);
-                    const yData = csvController.getNumberDataFromColumn(yColumn);
+                    {
+                        const xColumn = document.getElementById("x").value;
+                        const yColumn = document.getElementById("y").value;
+                        const xData = csvController.getNumberDataFromColumn(xColumn);
+                        const yData = csvController.getNumberDataFromColumn(yColumn);
 
-                    if (!linearRegressionModel) {
-                        alert('Modelo no entrenado previamente');
+                        if (!linearRegressionModel) {
+                            alert('Modelo no entrenado previamente');
+                        }
+                        if (!linearRegressionModel.predictXData || !linearRegressionModel.predictedYData) {
+                            alert('No se ha realizado predicciones sobre el modelo previamente');
+                        }
+                        configureChart('trained-chart', 'X', xData, 'Y', yData)
+                        configureChart('predicted-chart', 'X', linearRegressionModel.predictXData, 'Y', linearRegressionModel.predictedYData)
                     }
-                    if (!linearRegressionModel.predictXData || !linearRegressionModel.predictedYData) {
-                        alert('No se ha realizado predicciones sobre el modelo previamente');
-                    }
-                    configureChart('trained-chart', 'X', xData, 'Y', yData)
-                    configureChart('predicted-chart', 'X', linearRegressionModel.predictXData, 'Y', linearRegressionModel.predictedYData)
                     break;
                 case "polynomial":
+                    {
+                        const xColumn = document.getElementById("x").value;
+                        const yColumn = document.getElementById("y").value;
+                        const xData = csvController.getNumberDataFromColumn(xColumn);
+                        const yData = csvController.getNumberDataFromColumn(yColumn);
+
+                        if (!twoGradePolynomialRegression) {
+                            alert('Modelo no entrenado previamente');
+                        }
+                        if (!twoGradePolynomialRegression.predictXData || !twoGradePolynomialRegression.predictedYData) {
+                            alert('No se ha realizado predicciones sobre el modelo previamente');
+                        }
+                        configureChart('trained-chart', 'X', xData, 'Y', yData)
+                        configureChart2('predicted-chart',
+                            'X', twoGradePolynomialRegression.predictXData,
+                            '2th Grade', twoGradePolynomialRegression.predictedYData,
+                            '3th Grade', threeGradePolynomialRegression.predictedYData,
+                            '4th Grade', fourGradePolynomialRegression.predictedYData
+                        );
+                    }
                     break;
                 case "decision":
+                    {
+                        if (!decisionTreeModel) {
+                            alert('Modelo no entrenado previamente');
+                        }
+
+                        let dotStr = decisionTreeModel.generateDotString();
+                        var parsDot = vis.network.convertDot(dotStr);
+                        var data = {
+                            nodes: parsDot.nodes,
+                            edges: parsDot.edges
+                        }
+                        var options = {
+                            layout: {
+                                hierarchical: {
+                                    levelSeparation: 100,
+                                    nodeSpacing: 100,
+                                    parentCentralization: true,
+                                    direction: 'UD', // UD, DU, LR, RL
+                                    sortMethod: 'directed', // hubsize, directed
+                                    //shakeTowards: 'roots' // roots, leaves                        
+                                },
+                            },
+                        };
+
+                        let chart = document.getElementById('tree');
+                        var network = new vis.Network(chart, data, options);
+                        let div = document.getElementById("training-charts");
+                        div.style.display = "none";
+                        div = document.getElementById("prediction-charts");
+                        div.style.display = "none";
+                        div = document.getElementById("tree-charts");
+                        div.style.display = "block";
+                    }
                     break;
-                case "native":
+                case "bayes":
+                    {
+                        alert('Este modelo no proporciona graficos de salida')
+                    }
                     break;
                 case "neural":
+                    {
+                        alert('Este modelo no proporciona graficos de salida')
+                    }
                     break;
                 case "kmeans":
                     break;
@@ -307,7 +673,33 @@
                         return;
                     }
                     const element = row.trim().split(';')[index];
-                    element !== '' ? tempArray.push(Number(element)) : null;
+                    element ? tempArray.push(Number(element)) : null;
+                })
+                return tempArray;
+            }
+
+            getStringDataFromColumn(columnName) {
+                const headers = this.getHeaders();
+                let index = 0;
+                for (index = 0; index < headers.length; index++) {
+                    if (headers[index] === columnName) {
+                        break;
+                    }
+                }
+                if (index >= headers.length) {
+                    return null;
+                }
+
+                const rows = this.csvContent.split('\n');
+                let tempArray = [];
+                let firstRow = true;
+                rows.forEach((row) => {
+                    if (firstRow) {
+                        firstRow = false;
+                        return;
+                    }
+                    const element = row.trim().split(';')[index];
+                    element ? tempArray.push(element) : null;
                 })
                 return tempArray;
             }
@@ -346,6 +738,164 @@
 
         //----------------------------------------------
 
+        class PolynomialRegressionAdapter {
+
+            constructor() {
+                this.linearRegression = new PolynomialRegression();
+                this.predictXData = null;
+                this.predictedYData = null;
+            }
+
+            trainTwoGradeRegression(trainingXData, trainingYData) {
+                console.log("trainingXData: ");
+                console.log(trainingXData);
+                console.log("trainingYData: ");
+                console.log(trainingYData);
+                this.linearRegression.fit(trainingXData, trainingYData, 2);
+            }
+
+            trainThreeGradeRegression(trainingXData, trainingYData) {
+                console.log("trainingXData: ");
+                console.log(trainingXData);
+                console.log("trainingYData: ");
+                console.log(trainingYData);
+                this.linearRegression.fit(trainingXData, trainingYData, 3);
+            }
+
+            trainFourGradeRegression(trainingXData, trainingYData) {
+                console.log("trainingXData: ");
+                console.log(trainingXData);
+                console.log("trainingYData: ");
+                console.log(trainingYData);
+                this.linearRegression.fit(trainingXData, trainingYData, 4);
+            }
+
+            predict(predictXData) {
+                console.log("predictXData: ");
+                console.log(predictXData);
+                this.predictXData = predictXData;
+                this.predictedYData = this.linearRegression.predict(predictXData);
+                return this.predictedYData;
+            }
+
+
+        }
+
+        //----------------------------------------------
+
+        class DecisionTreeID3Adapter {
+
+            constructor(dataSet) {
+                this.decisionTree = new DecisionTreeID3(dataSet);
+                this.predictDataset = null;
+                this.predictedResult = null;
+                this.rootTree = null;
+            }
+
+            train() {
+                console.log("Decision-Tree TrainingDataset:");
+                console.log(this.decisionTree.dataset);
+                this.rootTree = this.decisionTree.train(this.decisionTree.dataset);
+            }
+
+            predict(dataSet) {
+                console.log("Decision-Tree PredictingDataset:");
+                console.log(dataSet);
+                this.predictDataset = dataSet;
+                this.predictedResult = this.decisionTree.predict(dataSet, this.rootTree);
+                return this.predictedResult;
+            }
+
+            generateDotString() {
+                return this.decisionTree.generateDotString(this.rootTree);
+            }
+        }
+
+        //----------------------------------------------
+
+        class NaiveBayesAdapter {
+
+            constructor() {
+                this.naiveBayes = new NaiveBayes();
+                this.variable = null;
+                this.causes = null;
+                this.predictedResult = null;
+            }
+
+            insertCause(atribute, values) {
+                this.naiveBayes.insertCause(atribute, values);
+            }
+
+            predict(variable, causes) {
+                console.log("Predict effect on '" + variable + "'' with the causes:")
+                console.log(causes);
+                this.variable = variable;
+                this.causes = causes;
+                this.predictedResult = this.naiveBayes.predict(variable, causes);
+                return this.predictedResult;
+            }
+
+        }
+
+        //----------------------------------------------
+
+        class NeuralNetworkAdapter {
+
+            constructor() {
+                this.neuralNetwork = new NeuralNetwork([2, 4, 3, 2]);
+                this.elementsCompared = null;
+                this.predictedResult = null;
+            }
+
+            trainHigherElementsCase() {
+                console.log('Training higuer element case')
+                for (let i = 0; i < 10000; i++) {
+                    let numero1 = Math.random();
+                    let numero2 = Math.random();
+                    this.neuralNetwork.Entrenar([numero1, numero2], (numero1 > numero2 ? [1, 0] : [0, 1]));
+                }
+            }
+
+            trainLowerElementsCase() {
+                console.log('Training lower element case')
+                for (let i = 0; i < 10000; i++) {
+                    let numero1 = Math.random();
+                    let numero2 = Math.random();
+                    this.neuralNetwork.Entrenar([numero1, numero2], (numero1 < numero2 ? [1, 0] : [0, 1]));
+                }
+            }
+
+            predict(elementA, elementB) {
+                console.log("Decision-Tree PredictingDataset:");
+                console.log([elementA, elementB]);
+                this.elementsCompared = [elementA, elementB];
+                this.predictedResult = this.neuralNetwork.Predecir([elementA, elementB]);
+                return this.predictedResult;
+            }
+
+        }
+
+        //----------------------------------------------
+
+        class G8_KmeansAdapter {
+
+            constructor(htmlCanvaElement, dataset, centroidesNumber) {
+                console.log('KmeansModel:');
+                console.log(dataset)
+                this.decisionTree = new G8_Kmeans({
+                    canvas: htmlCanvaElement,
+                    data: dataset,
+                    k: centroidesNumber
+                });
+            }
+
+            means() {
+                return this.decisionTree.means;
+            }
+        }
+
+        //----------------------------------------------
+
         function modelSelection() {
             hideSpecificParameters();
             if (!csvContent) {
@@ -354,24 +904,50 @@
                 const model = document.getElementById("model").value;
                 switch (model) {
                     case "linear":
-                        const headers = csvController.getHeaders();
-                        chargeHeadersOnSelectButtons(headers);
-                        document.getElementById("linear-parameters").style.display = "block";
+                        {
+                            const headers = csvController.getHeaders();
+                            chargeHeadersOnSelectButtons(headers);
+                            document.getElementById("regression-parameters").style.display = "block";
+                        }
                         break;
                     case "polynomial":
-                        document.getElementById("polynomial-parameters").style.display = "block";
+                        {
+                            const headers = csvController.getHeaders();
+                            chargeHeadersOnSelectButtons(headers);
+                            document.getElementById("regression-parameters").style.display = "block";
+                        }
                         break;
                     case "decision":
-                        document.getElementById("decision-parameters").style.display = "block";
+                        {
+                            const headers = csvController.getHeaders();
+                            configureDecisionCombobox(headers, "decision");
+                            document.getElementById("decision-parameters").style.display = "block";
+                        }
                         break;
-                    case "native":
-                        document.getElementById("native-parameters").style.display = "block";
+                    case "bayes":
+                        {
+                            const headers = csvController.getHeaders();
+                            configureDecisionCombobox(headers, "bayes");
+                            document.getElementById("bayes-parameters").style.display = "block";
+                            document.getElementById('graphics').style.display = 'none';
+                        }
                         break;
                     case "neural":
-                        document.getElementById("neural-parameters").style.display = "block";
+                        {
+                            document.getElementById("neural-parameters").style.display = "block";
+                            document.getElementById('graphics').style.display = 'none';
+                        }
                         break;
                     case "kmeans":
-                        document.getElementById("kmeans-parameters").style.display = "block";
+                        {
+                            const headers = csvController.getHeaders();
+                            configureDecisionCombobox(headers, "kmeans-x");
+                            configureDecisionCombobox(headers, "kmeans-y");
+                            document.getElementById('canvas').style.display = 'block';
+                            document.getElementById('graphics').style.display = 'none';
+                            document.getElementById("kmeans-parameters").style.display = "block";
+                        }
+
                         break;
                     case "knearest":
                         document.getElementById("knearest-parameters").style.display = "block";
@@ -397,8 +973,30 @@
             }
         }
 
+        function configureChart2(chartId, xTitle, xData, jTitle, jData, kTitle, kData, lTitle, lData) {
+            google.charts.load('current', { 'packages': ['corechart'] });
+            google.charts.setOnLoadCallback(drawChart);
+            const information = joinFourArrays(xTitle, xData, jTitle, jData, kTitle, kData, lTitle, lData)
+            console.log("Chart configuration:");
+            console.log(information)
+
+            function drawChart() {
+                var data = google.visualization.arrayToDataTable(information);
+                var options = {
+                    series: {
+                        1: { type: 'line' },
+                        2: { type: 'line' },
+                        3: { type: 'line' }
+                    }
+                };
+                var chart = new google.visualization.ComboChart(document.getElementById(chartId));
+                chart.draw(data, options);
+            }
+        }
+
         function chargeHeadersOnSelectButtons(csvHeaders) {
             const ySelectItem = document.getElementById("y");
+            ySelectItem.options.length = 0;
 
             csvHeaders.forEach((header) => {
                 let option = document.createElement("option");
@@ -408,6 +1006,7 @@
             })
 
             const xSelectItem = document.getElementById("x");
+            xSelectItem.options.length = 0;
 
             csvHeaders.forEach((header) => {
                 let option = document.createElement("option");
@@ -419,13 +1018,13 @@
 
         function hideSpecificParameters() {
             document.getElementById("error-parameters").style.display = "none";
-            document.getElementById("linear-parameters").style.display = "none";
-            document.getElementById("polynomial-parameters").style.display = "none";
+            document.getElementById("regression-parameters").style.display = "none";
             document.getElementById("decision-parameters").style.display = "none";
-            document.getElementById("native-parameters").style.display = "none";
+            document.getElementById("bayes-parameters").style.display = "none";
             document.getElementById("neural-parameters").style.display = "none";
             document.getElementById("kmeans-parameters").style.display = "none";
             document.getElementById("knearest-parameters").style.display = "none";
+            document.getElementById('graphics').style.display = 'block';
         }
 
         function configureSlider() {
@@ -457,6 +1056,109 @@
             });
         }
 
+        function configureDecisionCombobox(csvHeaders, modelName) {
+            const decisionSelectItem = document.getElementById(modelName + "-options");
+            decisionSelectItem.options.length = 0;
+
+            csvHeaders.forEach((header) => {
+                let option = document.createElement("option");
+                option.value = header;
+                option.text = header;
+                decisionSelectItem.add(option);
+            })
+        }
+
+        function addAtributeToTable(modelName) {
+            const select = document.getElementById(modelName + "-options");
+            const seleccion = select.value;
+            const tabla = document.getElementById(modelName + "-table").getElementsByTagName('tbody')[0];
+            const nuevaFila = tabla.insertRow();
+            const nuevaCelda = nuevaFila.insertCell(0);
+            nuevaCelda.textContent = seleccion;
+            if (modelName === "bayes") {
+                updateSecondSelectItem();
+                recalculateVariableValues();
+            }
+        }
+
+        function addDefaultValuesToTable(modelName) {
+            const tabla = document.getElementById(modelName + "-table").getElementsByTagName('tbody')[0];
+            let nuevaFila;
+            let nuevaCelda;
+            switch (modelName) {
+                case "bayes":
+                    {
+                        nuevaFila = tabla.insertRow();
+                        nuevaCelda = nuevaFila.insertCell(0);
+                        nuevaCelda.textContent = "clima";
+
+                        nuevaFila = tabla.insertRow();
+                        nuevaCelda = nuevaFila.insertCell(0);
+                        nuevaCelda.textContent = "temperatura";
+
+                        nuevaFila = tabla.insertRow();
+                        nuevaCelda = nuevaFila.insertCell(0);
+                        nuevaCelda.textContent = "humedad";
+
+                        nuevaFila = tabla.insertRow();
+                        nuevaCelda = nuevaFila.insertCell(0);
+                        nuevaCelda.textContent = "viento";
+
+                        nuevaFila = tabla.insertRow();
+                        nuevaCelda = nuevaFila.insertCell(0);
+                        nuevaCelda.textContent = "juega";
+                    }
+            }
+
+            if (modelName === "bayes") {
+                updateSecondSelectItem();
+                recalculateVariableValues();
+            }
+        }
+
+        function updateSecondSelectItem() {
+            const celdas = document.getElementById("bayes-table").getElementsByTagName("tbody")[0].getElementsByTagName("td");
+            const selectItem = document.getElementById("bayes-variable")
+            selectItem.options.length = 0;
+            for (let i = 0; i < celdas.length; i++) {
+                let option = document.createElement("option");
+                option.value = celdas[i].innerText;
+                option.text = celdas[i].innerText;
+                selectItem.add(option);
+            }
+        }
+
+        function recalculateVariableValues() {
+            const bayesTable = document.getElementById("bayes-table").getElementsByTagName("tbody")[0].getElementsByTagName("td");
+            const bayesVariablesTable = document.getElementById("bayes-variable-values").getElementsByTagName("tbody")[0];
+            bayesVariablesTable.innerText = '';
+
+            for (let i = 0; i < bayesTable.length; i++) {
+                const columnValues = csvController.getStringDataFromColumn(bayesTable[i].innerText);
+                const uniqueColumnValues = [...new Set(columnValues)];
+                console.log(uniqueColumnValues)
+
+                const nuevaFila = bayesVariablesTable.insertRow();
+                const celdaNombre = nuevaFila.insertCell(0);
+                celdaNombre.id = 'select-variables-bayes-' + i;
+                celdaNombre.className = 'select-variables-bayes';
+                celdaNombre.textContent = bayesTable[i].innerText;
+
+                let selectItem = document.createElement("select");
+                selectItem.id = 'select-values-bayes-' + i;
+                selectItem.className = 'select-values-bayes';
+                for (let j = 0; j < uniqueColumnValues.length; j++) {
+                    let option = document.createElement("option");
+                    option.value = uniqueColumnValues[j];
+                    option.text = uniqueColumnValues[j];
+                    selectItem.appendChild(option);
+                }
+
+                const nuevaCelda = nuevaFila.insertCell(1);
+                nuevaCelda.appendChild(selectItem);
+            }
+        }
+
         function joinTwoArrays() {
             var t = [];
             if (4 == arguments.length) {
@@ -465,6 +1167,40 @@
                     t.push([arguments[1][e], arguments[3][e]])
             }
             return t
+        }
+
+        function joinFourArrays() {
+            var a = []
+            if (arguments.length == 8) {
+                a.push([arguments[0], arguments[2], arguments[4], arguments[6]]);
+                for (var i = 0; i < arguments[1].length; i++) {
+                    a.push([arguments[1][i], arguments[3][i], arguments[5][i], arguments[7][i]]);
+                }
+            }
+            return a;
+        }
+
+        function joinNArrays() {
+            var a = []
+            var temp = []
+            for (let i = 0; i < arguments.length; i++) {
+                if (i % 2 === 0) {
+                    // Argumentos pares: 0, 2, 4, 6 ....
+                    temp.push(arguments[i])
+                }
+            }
+            a.push(temp);
+            for (let i = 0; i < arguments[1].length; i++) {
+                temp = [];
+                for (let j = 1; j < arguments.length; j++) {
+                    if (j % 2 !== 0) {
+                        // Argumentos impares: 1, 3, 5, 7 ....
+                        temp.push(arguments[j][i])
+                    }
+                }
+                a.push(temp);
+            }
+            return a;
         }
 
         hideSpecificParameters();
