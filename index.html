@@ -147,13 +147,21 @@
                 cuenta
                 para entrenar el algoritmo</p>
 
-            <label for="decision-options">Seleccione una columna</label>
-            <select id="decision-options">
-            </select>
+            <div class="flex flex-row items-center gap-2">
+                <label for="decision-options" class="w-96">Seleccione una columna</label>
+                <select id="decision-options" class="p-2 border border-gray-300 rounded-md w-full">
+                </select>
 
-            <button onclick="addAtributeToTable('decision')">Agregar columna</button>
+                <button onclick="addAtributeToTable('decision')"
+                    class="bg-gray-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600">Agregar columna</button>
 
-            <table id="decision-table" border="block">
+                <button onclick="addDefaultValuesToTable('decision')"
+                    class="bg-gray-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600 w-72">Agregar valores por defecto</button>
+            </div>
+
+            <br>
+
+            <table id="decision-table" border="block" class="min-w-full bg-white border border-gray-200 rounded-lg">
                 <thead>
                     <tr>
                         <th>Atributos del dataset</th>
@@ -235,64 +243,77 @@
 
         <div id="neural-parameters">
 
-            <div>
-                <label for="neural-prediction">¿Que tipo de prediccion desea realizar?</label>
-                <select id="neural-prediction">
-                    <option id="higher">¿Cual elemento es el mayor?</option>
-                    <option id="lower">¿Cual elemento es el menor?</option>
-                </select>
+            <div class="grid grid-cols-2 gap-8 items-center">
+                <div class="flex flex-col">
+                    <label for="neural-prediction">¿Que tipo de prediccion desea realizar?</label>
+                    <select id="neural-prediction" class="p-2 border border-gray-300 rounded-md w-full">
+                        <option id="higher">¿Cual elemento es el mayor?</option>
+                        <option id="lower">¿Cual elemento es el menor?</option>
+                    </select>
+                </div>
+                <div class="flex flex-col gap-2">
+                    <div class="flex flex-row">
+                        <label for="neural-A" class="text-center">Elemento A:</label>
+                        <input id="neural-A" type="number" class="p-2 border border-gray-300 rounded-md w-full mx-4" />
+                    </div>
+                    <div class="flex flex-row">
+                        <label for="neural-B" class="text-center">Elemento B:</label>
+                        <input id="neural-B" type="number" class="p-2 border border-gray-300 rounded-md w-full mx-4" />
+                    </div>
+                </div>
             </div>
 
-            <div>
-                <label for="neural-A">Elemento A:</label>
-                <input id="neural-A" type="number" />
-            </div>
-
-            <div>
-                <label for="neural-B">Elemento B:</label>
-                <input id="neural-B" type="number" />
-            </div>
         </div>
 
         <div id="kmeans-parameters">
 
-            <p>Es necesario indicar cuales columnas del CSV son las que almacenan los atributos que serán tomados en
+            <p class="text-gray-600 mb-4">Es necesario indicar cuales columnas del CSV son las que almacenan los
+                atributos que serán tomados en
                 cuenta
                 para entrenar el algoritmo</p>
 
-            <div>
-                <label for="kmeans-x-options">Referencia en el eje X del punto</label>
-                <select id="kmeans-x-options">
-                </select>
-            </div>
+            <div class="grid grid-cols-1 gap-2">
+                <div class="flex flex-row items-center">
+                    <label for="kmeans-x-options" class="w-96">Referencia en el eje X del punto</label>
+                    <select id="kmeans-x-options" class="p-2 border border-gray-300 rounded-md w-full">
+                    </select>
+                </div>
 
-            <div>
-                <label for="kmeans-y-options">Referencia en el eje Y del punto</label>
-                <select id="kmeans-y-options">
-                </select>
-            </div>
+                <div class="flex flex-row items-center">
+                    <label for="kmeans-y-options" class="w-96">Referencia en el eje Y del punto</label>
+                    <select id="kmeans-y-options" class="p-2 border border-gray-300 rounded-md w-full">
+                    </select>
+                </div>
 
-            <div>
-                <label for="kmeans-y-options">Cantidad de centroides a calcular</label>
-                <input id="kmeans-centroides" type="number" />
+                <div class="flex flex-row items-center">
+                    <label for="kmeans-y-options" class="w-96">Cantidad de centroides a calcular</label>
+                    <input id="kmeans-centroides" type="number" class="p-2 border border-gray-300 rounded-md w-full" />
+                </div>
             </div>
         </div>
 
         <div id="knearest-parameters">
         </div>
 
-
         <h2 class="text-2xl font-semibold text-gray-700 mt-6 mb-4">Paso 4: Uso del modelo</h2>
         <p class="text-gray-600 mb-2">Acciones disponibles para usar el modelo según la configuración previamente
             establecida
         </p>
 
-        <button onclick="trainModel()"
-            class="bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600">Entrenar</button>
+        <p id="aclaracion-paso4" class="text-gray-600 mb-2"><b>NOTA:</b> La implementacion de tytus.js del modelo de IA
+            seleccionado no permite el entrenamiento manual, esto lo realiza internamente el modelo al realizar una
+            proyeccion.</p>
+        <p id="aclaracion2-paso4" class="text-gray-600 mb-2"><b>NOTA 2:</b> La implementacion de tytus.js del modelo de
+            IA
+            seleccionado no permite la visualizacion de gráficas que briden informacion util al usuario</p>
+
+        <button onclick="trainModel()" class="bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600"
+            id="train-button">Entrenar</button>
         <button onclick="predictModel()"
             class="bg-green-500 text-white font-semibold py-2 px-4 rounded hover:bg-green-600">Predecir</button>
         <button onclick="showResultChart()"
-            class="bg-purple-500 text-white font-semibold py-2 px-4 rounded hover:bg-purple-600">Mostrar
+            class="bg-purple-500 text-white font-semibold py-2 px-4 rounded hover:bg-purple-600"
+            id="show-graphics-button">Mostrar
             graficas</button>
 
         <h2 class="text-2xl font-semibold text-gray-700 mt-6 mb-4">Area de resultados</h2>
@@ -311,7 +332,7 @@
                 <div id="predicted-chart" style="width: 100%; height: 500px;"></div>
             </div>
             <div id="tree-charts" style="display: none;">
-                <label for="tree">Arbol de decision predecido</label>
+                <label for="tree">Arbol de decision generado</label>
                 <div style="width: 100%; height: 500px; border: 2px dashed red; border-radius: 10px;" id="tree"></div>
             </div>
         </div>
@@ -520,8 +541,8 @@
 
                         document.getElementById("result").innerText =
                             "Prediccion realizada:\n"
-                            + "provided dataset: " + txtPredicting + "\n"
-                            + "predicted response: " + JSON.stringify(predictedResult);
+                            + "Dataset enviado: " + txtPredicting + "\n"
+                            + "Respuesta:\n" + JSON.stringify(predictedResult);
                     }
                     break;
                 case "bayes":
@@ -1023,12 +1044,20 @@
                             configureDecisionCombobox(headers, "bayes");
                             document.getElementById("bayes-parameters").style.display = "block";
                             document.getElementById('graphics').style.display = 'none';
+                            document.getElementById('train-button').style.display = 'none';
+                            document.getElementById('show-graphics-button').style.display = 'none';
+                            document.getElementById('aclaracion-paso4').style.display = 'block';
+                            document.getElementById('aclaracion2-paso4').style.display = 'block';
                         }
                         break;
                     case "neural":
                         {
                             document.getElementById("neural-parameters").style.display = "block";
                             document.getElementById('graphics').style.display = 'none';
+                            document.getElementById('train-button').style.display = 'none';
+                            document.getElementById('show-graphics-button').style.display = 'none';
+                            document.getElementById('aclaracion-paso4').style.display = 'block';
+                            document.getElementById('aclaracion2-paso4').style.display = 'block';
                         }
                         break;
                     case "kmeans":
@@ -1039,6 +1068,9 @@
                             document.getElementById('canvas').style.display = 'block';
                             document.getElementById('graphics').style.display = 'none';
                             document.getElementById("kmeans-parameters").style.display = "block";
+                            document.getElementById('train-button').style.display = 'none';
+                            document.getElementById('show-graphics-button').style.display = 'none';
+                            document.getElementById('aclaracion-paso4').style.display = 'block';
                         }
 
                         break;
@@ -1117,6 +1149,9 @@
             document.getElementById("neural-parameters").style.display = "none";
             document.getElementById("kmeans-parameters").style.display = "none";
             document.getElementById("knearest-parameters").style.display = "none";
+
+            document.getElementById("aclaracion-paso4").style.display = "none";
+            document.getElementById("aclaracion2-paso4").style.display = "none";
         }
 
         function configureSlider() {
@@ -1212,6 +1247,40 @@
                         nuevaCelda.className = "px-6 py-4 text-gray-600";
                         nuevaCelda.textContent = "juega";
                     }
+                    break;
+                case "decision":
+                    {
+                        nuevaFila = tabla.insertRow();
+                        nuevaFila.className = "border-t";
+                        nuevaCelda = nuevaFila.insertCell(0);
+                        nuevaCelda.className = "px-6 py-4 text-gray-600";
+                        nuevaCelda.textContent = "Outlook";
+
+                        nuevaFila = tabla.insertRow();
+                        nuevaFila.className = "border-t";
+                        nuevaCelda = nuevaFila.insertCell(0);
+                        nuevaCelda.className = "px-6 py-4 text-gray-600";
+                        nuevaCelda.textContent = "Temperature";
+
+                        nuevaFila = tabla.insertRow();
+                        nuevaFila.className = "border-t";
+                        nuevaCelda = nuevaFila.insertCell(0);
+                        nuevaCelda.className = "px-6 py-4 text-gray-600";
+                        nuevaCelda.textContent = "Humidity";
+
+                        nuevaFila = tabla.insertRow();
+                        nuevaFila.className = "border-t";
+                        nuevaCelda = nuevaFila.insertCell(0);
+                        nuevaCelda.className = "px-6 py-4 text-gray-600";
+                        nuevaCelda.textContent = "Windy";
+
+                        nuevaFila = tabla.insertRow();
+                        nuevaFila.className = "border-t";
+                        nuevaCelda = nuevaFila.insertCell(0);
+                        nuevaCelda.className = "px-6 py-4 text-gray-600";
+                        nuevaCelda.textContent = "Play Tennis";
+                    }
+                    break;
             }
 
             if (modelName === "bayes") {
