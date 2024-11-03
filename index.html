@@ -153,10 +153,12 @@
                 </select>
 
                 <button onclick="addAtributeToTable('decision')"
-                    class="bg-gray-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600">Agregar columna</button>
+                    class="bg-gray-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600">Agregar
+                    columna</button>
 
                 <button onclick="addDefaultValuesToTable('decision')"
-                    class="bg-gray-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600 w-72">Agregar valores por defecto</button>
+                    class="bg-gray-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600 w-72">Agregar
+                    valores por defecto</button>
             </div>
 
             <br>
@@ -303,18 +305,19 @@
         <p id="aclaracion-paso4" class="text-gray-600 mb-2"><b>NOTA:</b> La implementacion de tytus.js del modelo de IA
             seleccionado no permite el entrenamiento manual, esto lo realiza internamente el modelo al realizar una
             proyeccion.</p>
-        <p id="aclaracion2-paso4" class="text-gray-600 mb-2"><b>NOTA 2:</b> La implementacion de tytus.js del modelo de
-            IA
-            seleccionado no permite la visualizacion de gráficas que briden informacion util al usuario</p>
 
-        <button onclick="trainModel()" class="bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600"
-            id="train-button">Entrenar</button>
-        <button onclick="predictModel()"
-            class="bg-green-500 text-white font-semibold py-2 px-4 rounded hover:bg-green-600">Predecir</button>
-        <button onclick="showResultChart()"
-            class="bg-purple-500 text-white font-semibold py-2 px-4 rounded hover:bg-purple-600"
-            id="show-graphics-button">Mostrar
-            graficas</button>
+        <div class="flex flex-row gap-2">
+            <button onclick="trainModel()"
+                class="bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600"
+                id="train-button">Entrenar</button>
+            <button onclick="predictModel()"
+                class="bg-green-500 text-white font-semibold py-2 px-4 rounded hover:bg-green-600">Predecir</button>
+            <button onclick="showResultChart()"
+                class="bg-purple-500 text-white font-semibold py-2 px-4 rounded hover:bg-purple-600"
+                id="show-graphics-button">Mostrar
+                graficas</button>
+        </div>
+
 
         <h2 class="text-2xl font-semibold text-gray-700 mt-6 mb-4">Area de resultados</h2>
 
@@ -739,12 +742,16 @@
                     break;
                 case "bayes":
                     {
-                        alert('Este modelo no proporciona graficos de salida')
+                        const prediction = naiveBayesModel.predictedResult[0];
+                        const probability = Number(naiveBayesModel.predictedResult[1].split('%')[0]);
+                        configureBarChart('predicted-chart', 'Prediccion', [prediction, 'Otros'], 'Probabilidad', [probability, 100 - probability]);
                     }
                     break;
                 case "neural":
                     {
-                        alert('Este modelo no proporciona graficos de salida')
+                        const elementA = neuralNetworkModel.predictedResult[0];
+                        const elementB = neuralNetworkModel.predictedResult[1];
+                        configureBarChart('predicted-chart', 'Prediccion', ['Elemento A', 'Elemento B'], 'Probabilidad', [elementA, elementB]);
                     }
                     break;
                 case "kmeans":
@@ -1043,21 +1050,21 @@
                             const headers = csvController.getHeaders();
                             configureDecisionCombobox(headers, "bayes");
                             document.getElementById("bayes-parameters").style.display = "block";
-                            document.getElementById('graphics').style.display = 'none';
+                            document.getElementById('graphics').style.display = 'block';
                             document.getElementById('train-button').style.display = 'none';
-                            document.getElementById('show-graphics-button').style.display = 'none';
+                            document.getElementById('show-graphics-button').style.display = 'block';
                             document.getElementById('aclaracion-paso4').style.display = 'block';
-                            document.getElementById('aclaracion2-paso4').style.display = 'block';
+                            document.getElementById('training-charts').style.display = 'none';
                         }
                         break;
                     case "neural":
                         {
                             document.getElementById("neural-parameters").style.display = "block";
-                            document.getElementById('graphics').style.display = 'none';
+                            document.getElementById('graphics').style.display = 'block';
                             document.getElementById('train-button').style.display = 'none';
-                            document.getElementById('show-graphics-button').style.display = 'none';
+                            document.getElementById('show-graphics-button').style.display = 'block';
                             document.getElementById('aclaracion-paso4').style.display = 'block';
-                            document.getElementById('aclaracion2-paso4').style.display = 'block';
+                            document.getElementById('training-charts').style.display = 'none';
                         }
                         break;
                     case "kmeans":
@@ -1093,7 +1100,7 @@
                 var options = {
                     series: { 1: { type: 'line' } }
                 };
-                var chart = new google.visualization.ComboChart(document.getElementById(chartId));
+                var chart = new google.visualization.ScatterChart(document.getElementById(chartId));
                 chart.draw(data, options);
             }
         }
@@ -1115,6 +1122,31 @@
                     }
                 };
                 var chart = new google.visualization.ComboChart(document.getElementById(chartId));
+                chart.draw(data, options);
+            }
+        }
+
+        function configureBarChart(chartId, xTitle, xData, yTitle, yData) {
+            google.charts.load('current', { 'packages': ['corechart', 'bar'] });
+            google.charts.setOnLoadCallback(drawChart);
+            const information = joinTwoArrays(xTitle, xData, yTitle, yData)
+            console.log("Chart configuration:");
+            console.log(information)
+
+            function drawChart() {
+                var data = google.visualization.arrayToDataTable(information);
+                var options = {
+                    title: 'Prediccion en base a probabilidad',
+                    chartArea: { width: '50%' },
+                    hAxis: {
+                        title: '',
+                        minValue: 0
+                    },
+                    vAxis: {
+                        title: ''
+                    }
+                };
+                var chart = new google.visualization.ColumnChart(document.getElementById(chartId));
                 chart.draw(data, options);
             }
         }
@@ -1151,7 +1183,6 @@
             document.getElementById("knearest-parameters").style.display = "none";
 
             document.getElementById("aclaracion-paso4").style.display = "none";
-            document.getElementById("aclaracion2-paso4").style.display = "none";
         }
 
         function configureSlider() {
