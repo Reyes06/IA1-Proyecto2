@@ -6,229 +6,320 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis-network.min.js"></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>IA1 - Proyecto 2</title>
 </head>
 
-<body>
+<body class="bg-gray-100 p-10 font-sans">
 
-    <h1>Proyecto 2 - Implementacion de libreria tytus.js</h1>
+    <div class="max-w-4xl mx-auto p-8 bg-white shadow-md rounded-lg">
 
-    <h2>Paso 1: Carga del dataset</h2>
-    <p>Archivo CSV que se utilizará para entrenar y validar los algoritmos de inteligencia artificial</p>
-    <input type="file" id="csvFile" accept=".csv">
+        <h1 class="text-4xl font-bold text-center text-blue-600 mb-8">Proyecto 2 - Implementacion de libreria tytus.js
+        </h1>
 
-    <br><br>
+        <h2 class="text-2xl font-semibold text-gray-700 mt-6 mb-4">Paso 1: Carga del dataset</h2>
+        <p class="text-gray-600 mb-4">Archivo CSV que se utilizará para entrenar y validar los algoritmos de
+            inteligencia artificial</p>
+        <input type="file" id="csvFile" accept=".csv">
 
-    <h2>Paso 2: Selección del modelo de inteligencia artificial</h2>
-    <p>Elección del algoritmo de inteligencia artificial que se hará uso, se encuentran disponibles los principales que
-        proporciona la libreria tytus.js:</p>
-    <ul>
-        <li>Linear Regression --------- Tendencias</li>
-        <li>Polynomial Regression --- Tendencias</li>
-        <li>Naive Bayes ---------------- Predicciones</li>
-        <li>Neural Networks ---------- Predicciones</li>
-        <li>Decision Trees ------------- Patrones</li>
-        <li>K-means -------------------- Patrones</li>
-    </ul>
+        <br>
 
-    <label for="model">Modelo a utilizar: </label>
-    <select id="model" onchange="modelSelection()">
-        <option value="empty">---</option>
-        <option value="linear">Linear Regression</option>
-        <option value="polynomial">Polynomial Regression</option>
-        <option value="bayes">Naive Bayes</option>
-        <option value="neural">Neural Networks</option>
-        <option value="decision">Decision Trees</option>
-        <option value="kmeans">K-means</option>
-    </select>
-
-    <h2>Paso 3: Parametrización del modelo</h2>
-    <p>Campos que se necesitan llenar para parametrizar el comportamiento del modelo</p>
-
-    <h3>Parametros generales</h3>
-
-    <div>
-        <p>Porcentaje de los datos que será utilizada para el entrenamiento y porcentaje que será utilizada para las
-            pruebas de las predicciones</p>
-        <datalist id="marks">
-            <option value="0" label="0%"></option>
-            <option value="10"></option>
-            <option value="20"></option>
-            <option value="30"></option>
-            <option value="40"></option>
-            <option value="50" label="50%"></option>
-            <option value="60"></option>
-            <option value="70"></option>
-            <option value="80"></option>
-            <option value="90"></option>
-            <option value="100" label="100%"></option>
-        </datalist>
-
-        <label for="data-percent">Train data</label>
-        <b><output id="train-percent" for="range"></output>%</b>
-        <input type="range" list="marks" value="80" />
-        <b><output id="test-percent" for="range"></output>%</b>
-        <label for="data-percent">Test data</label>
-    </div>
-
-    <h3>Parametros especificos del modelo</h3>
-
-    <div id="error-parameters">
-        <p>Porfavor cargar un archivo CSV</p>
-    </div>
-
-    <div id="regression-parameters">
-        <div>
-            <label for="x">Columna de la variable independiente (X)</label>
-            <select id="x">
-            </select>
+        <h2 class="text-2xl font-semibold text-gray-700 mt-6 mb-4">Paso 2: Selección del modelo de inteligencia
+            artificial</h2>
+        <p class="text-gray-600 mb-4">Elección del algoritmo de inteligencia artificial que se hará uso, se encuentran
+            disponibles los principales
+            que
+            proporciona la libreria tytus.js:</p>
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white border border-gray-200 rounded-lg">
+                <thead>
+                    <tr>
+                        <th class="px-6 py-3 text-left text-gray-700 uppercase font-semibold">Modelo de IA</th>
+                        <th class="px-6 py-3 text-left text-gray-700 uppercase font-semibold">Propósito de uso</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-t">
+                        <td class="px-6 py-4 text-gray-600">Linear Regression</td>
+                        <td class="px-6 py-4 text-gray-600">Identificación de <b>tendencias</b></td>
+                    </tr>
+                    <tr class="border-t">
+                        <td class="px-6 py-4 text-gray-600">Polynomial Regression</td>
+                        <td class="px-6 py-4 text-gray-600">Identificación de <b>tendencias</b></td>
+                    </tr>
+                    <tr class="border-t">
+                        <td class="px-6 py-4 text-gray-600">Naive Bayes</td>
+                        <td class="px-6 py-4 text-gray-600">Realización de <b>predicciones</b></td>
+                    </tr>
+                    <tr class="border-t">
+                        <td class="px-6 py-4 text-gray-600">Neural Networks</td>
+                        <td class="px-6 py-4 text-gray-600">Realización de <b>predicciones</b></td>
+                    </tr>
+                    <tr class="border-t">
+                        <td class="px-6 py-4 text-gray-600">Decision Trees</td>
+                        <td class="px-6 py-4 text-gray-600">Organización de la información mediante <b>patrones</b></td>
+                    </tr>
+                    <tr class="border-t">
+                        <td class="px-6 py-4 text-gray-600">K-means</td>
+                        <td class="px-6 py-4 text-gray-600">Organización de la información mediante <b>patrones</b></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-        <div>
-            <label for="y">Columna de la variable dependiente (Y)</label>
-            <select id="y">
-            </select>
-        </div>
-    </div>
 
-    <div id="decision-parameters">
+        <br>
 
-        <p>Es necesario indicar cuales columnas del CSV son las que almacenan los atributos que serán tomados en cuenta
-            para entrenar el algoritmo</p>
-
-        <label for="decision-options">Seleccione una columna</label>
-        <select id="decision-options">
-        </select>
-
-        <button onclick="addAtributeToTable('decision')">Agregar columna</button>
-
-        <table id="decision-table" border="block">
-            <thead>
-                <tr>
-                    <th>Atributos del dataset</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
-
-    <div id="bayes-parameters">
-        <p>Es necesario indicar cuales columnas del CSV son las que almacenan los atributos que serán tomados en cuenta
-            para entrenar el algoritmo</p>
-
-        <label for="bayes-options">Seleccione una columna</label>
-        <select id="bayes-options">
-        </select>
-
-        <button onclick="addAtributeToTable('bayes')">Agregar columna</button>
-        <button onclick="addDefaultValuesToTable('bayes')">Agregar valores por defecto</button>
-
-        <table id="bayes-table" border="block">
-            <thead>
-                <tr>
-                    <th>Atributos del dataset</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-
-        <p>¿Qué variable se desea predecir?</p>
-        <select id="bayes-variable">
-        </select>
-
-        <p>¿Bajo de qué condiciones se desea predecir la variable?</p>
-        <table id="bayes-variable-values" border="block">
-            <thead>
-                <tr>
-                    <th>Variable</th>
-                    <th>Valor</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
-
-    <div id="neural-parameters">
-
-        <div>
-            <label for="neural-prediction">¿Que tipo de prediccion desea realizar?</label>
-            <select id="neural-prediction">
-                <option id="higher">¿Cual elemento es el mayor?</option>
-                <option id="lower">¿Cual elemento es el menor?</option>
+        <div class="flex flex-row">
+            <label for="model">Modelo a utilizar: </label>
+            <select id="model" onchange="modelSelection()" class="p-2 border border-gray-300 rounded-md w-full">
+                <option value="empty">---</option>
+                <option value="linear">Linear Regression</option>
+                <option value="polynomial">Polynomial Regression</option>
+                <option value="bayes">Naive Bayes</option>
+                <option value="neural">Neural Networks</option>
+                <option value="decision">Decision Trees</option>
+                <option value="kmeans">K-means</option>
             </select>
         </div>
 
+        <h2 class="text-2xl font-semibold text-gray-700 mt-6 mb-4">Paso 3: Parametrización del modelo</h2>
+        <p class="text-gray-600 mb-4">Campos que se necesitan llenar para parametrizar el comportamiento del modelo</p>
+
+        <h3 class="text-xl font-semibold text-gray-700 mb-2">- Parametros generales</h3>
+
         <div>
-            <label for="neural-A">Elemento A:</label>
-            <input id="neural-A" type="number" />
+            <p class="text-gray-600 mb-2">Porcentaje de los datos que será utilizada para el entrenamiento y porcentaje
+                que será utilizada para las
+                pruebas de las predicciones</p>
+            <datalist id="marks">
+                <option value="0" label="0%"></option>
+                <option value="10"></option>
+                <option value="20"></option>
+                <option value="30"></option>
+                <option value="40"></option>
+                <option value="50" label="50%"></option>
+                <option value="60"></option>
+                <option value="70"></option>
+                <option value="80"></option>
+                <option value="90"></option>
+                <option value="100" label="100%"></option>
+            </datalist>
+
+            <div class="flex flex-row">
+                <div class="flex flex-col justify-center mr-4">
+                    <label for="data-percent">Train data</label>
+                    <b><output id="train-percent" for="range"></output>%</b>
+                </div>
+                <input type="range" list="marks" value="80" class="w-full" />
+                <div class="flex flex-col justify-center ml-4">
+                    <label for="data-percent">Test data</label>
+                    <b><output id="test-percent" for="range"></output>%</b>
+                </div>
+            </div>
+
         </div>
 
-        <div>
-            <label for="neural-B">Elemento B:</label>
-            <input id="neural-B" type="number" />
+        <br>
+
+        <h3 class="text-xl font-semibold text-gray-700 mb-2">- Parametros especificos del modelo</h3>
+
+        <div id="error-parameters" class="text-rose-600">
+            <p>Porfavor cargar un archivo CSV</p>
         </div>
-    </div>
 
-    <div id="kmeans-parameters">
+        <div id="regression-parameters">
+            <div class="mb-4">
+                <label for="x">Columna de la variable independiente (X)</label>
+                <select id="x" class="p-2 border border-gray-300 rounded-md">
+                </select>
+            </div>
+            <div>
+                <label for="y">Columna de la variable dependiente (Y)</label>
+                <select id="y" class="p-2 border border-gray-300 rounded-md">
+                </select>
+            </div>
+        </div>
 
-        <p>Es necesario indicar cuales columnas del CSV son las que almacenan los atributos que serán tomados en cuenta
-            para entrenar el algoritmo</p>
+        <div id="decision-parameters">
 
-        <div>
-            <label for="kmeans-x-options">Referencia en el eje X del punto</label>
-            <select id="kmeans-x-options">
+            <p class="text-gray-600 mb-2">Es necesario indicar cuales columnas del CSV son las que almacenan los
+                atributos que serán tomados en
+                cuenta
+                para entrenar el algoritmo</p>
+
+            <label for="decision-options">Seleccione una columna</label>
+            <select id="decision-options">
             </select>
+
+            <button onclick="addAtributeToTable('decision')">Agregar columna</button>
+
+            <table id="decision-table" border="block">
+                <thead>
+                    <tr>
+                        <th>Atributos del dataset</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
         </div>
 
-        <div>
-            <label for="kmeans-y-options">Referencia en el eje Y del punto</label>
-            <select id="kmeans-y-options">
-            </select>
+        <div id="bayes-parameters">
+            <p class="text-gray-600 mb-4">Es necesario indicar cuales columnas del CSV son las que almacenan los
+                atributos que serán tomados en
+                cuenta
+                para entrenar el algoritmo</p>
+
+            <div class="grid grid-cols-2 gap-8">
+                <div>
+                    <div class="flex flex-row">
+                        <label for="bayes-options">Seleccione una columna</label>
+                        <select id="bayes-options" class="p-2 border border-gray-300 rounded-md w-full">
+                        </select>
+                    </div>
+
+                    <br>
+
+                    <div class="flex justify-center gap-1">
+                        <button onclick="addAtributeToTable('bayes')"
+                            class="bg-gray-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600">Agregar
+                            columna</button>
+                        <button onclick="addDefaultValuesToTable('bayes')"
+                            class="bg-gray-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600">Agregar
+                            valores
+                            por
+                            defecto</button>
+                    </div>
+
+                    <br>
+
+                    <table id="bayes-table" class="min-w-full bg-white border border-gray-200 rounded-lg">
+                        <thead>
+                            <tr>
+                                <th class="px-6 py-3 text-left text-gray-700 uppercase font-semibold">Atributos a
+                                    utilizar
+                                    del dataset</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div>
+                    <div class="flex flex-row">
+                        <p>¿Qué variable predecir?</p>
+                        <select id="bayes-variable" class="p-2 border border-gray-300 rounded-md w-full"></select>
+                    </div>
+
+                    <br>
+
+                    <p>¿Bajo de qué condiciones se desea predecir la variable?</p>
+                    <table id="bayes-variable-values" class="min-w-full bg-white border border-gray-200 rounded-lg">
+                        <thead>
+                            <tr>
+                                <th class="px-6 py-3 text-left text-gray-700 uppercase font-semibold">Variable</th>
+                                <th class="px-6 py-3 text-left text-gray-700 uppercase font-semibold">Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+
+
         </div>
 
-        <div>
-            <label for="kmeans-y-options">Cantidad de centroides a calcular</label>
-            <input id="kmeans-centroides" type="number" />
+        <div id="neural-parameters">
+
+            <div>
+                <label for="neural-prediction">¿Que tipo de prediccion desea realizar?</label>
+                <select id="neural-prediction">
+                    <option id="higher">¿Cual elemento es el mayor?</option>
+                    <option id="lower">¿Cual elemento es el menor?</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="neural-A">Elemento A:</label>
+                <input id="neural-A" type="number" />
+            </div>
+
+            <div>
+                <label for="neural-B">Elemento B:</label>
+                <input id="neural-B" type="number" />
+            </div>
         </div>
-    </div>
 
-    <div id="knearest-parameters">
-    </div>
+        <div id="kmeans-parameters">
 
+            <p>Es necesario indicar cuales columnas del CSV son las que almacenan los atributos que serán tomados en
+                cuenta
+                para entrenar el algoritmo</p>
 
-    <h2>Paso 4: Ejecucion del modelo</h2>
-    <p>Ejecución del modelo según la configuración previamente establecida, tomando como base el archivo de entrada</p>
+            <div>
+                <label for="kmeans-x-options">Referencia en el eje X del punto</label>
+                <select id="kmeans-x-options">
+                </select>
+            </div>
 
-    <button onclick="trainModel()">Entrenar</button>
-    <button onclick="predictModel()">Predecir</button>
-    <button onclick="showResultChart()">Mostrar graficas</button>
+            <div>
+                <label for="kmeans-y-options">Referencia en el eje Y del punto</label>
+                <select id="kmeans-y-options">
+                </select>
+            </div>
 
-    <h2>Area de resultados:</h2>
-
-    <div id="result"></div>
-
-    <div id="graphics">
-        <h2>Area de graficas:</h2>
-
-        <div id="training-charts">
-            <label for="trained-chart">Datos utilizados para el entrenamiento</label>
-            <div id="trained-chart" style="width: 900px; height: 500px;"></div>
+            <div>
+                <label for="kmeans-y-options">Cantidad de centroides a calcular</label>
+                <input id="kmeans-centroides" type="number" />
+            </div>
         </div>
-        <div id="prediction-charts">
-            <label for="predicted-chart">Datos predecidos por el modelo</label>
-            <div id="predicted-chart" style="width: 900px; height: 500px;"></div>
-        </div>
-        <div id="tree-charts" style="display: none;">
-            <label for="tree">Arbol de decision predecido</label>
-            <div style="width: 100%; height: 500px; border: 2px dashed red; border-radius: 10px;" id="tree"></div>
-        </div>
-    </div>
 
-    <div id="canvas" style="display: none;">
-        <h2>Area de canvas:</h2>
-        <canvas id="kmeans-canva" width="600" height="600"></canvas>
+        <div id="knearest-parameters">
+        </div>
+
+
+        <h2 class="text-2xl font-semibold text-gray-700 mt-6 mb-4">Paso 4: Uso del modelo</h2>
+        <p class="text-gray-600 mb-2">Acciones disponibles para usar el modelo según la configuración previamente
+            establecida
+        </p>
+
+        <button onclick="trainModel()"
+            class="bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600">Entrenar</button>
+        <button onclick="predictModel()"
+            class="bg-green-500 text-white font-semibold py-2 px-4 rounded hover:bg-green-600">Predecir</button>
+        <button onclick="showResultChart()"
+            class="bg-purple-500 text-white font-semibold py-2 px-4 rounded hover:bg-purple-600">Mostrar
+            graficas</button>
+
+        <h2 class="text-2xl font-semibold text-gray-700 mt-6 mb-4">Area de resultados</h2>
+
+        <p id="result" class="text-ellipsis overflow-hidden"></p>
+
+        <div id="graphics" style="display: none;">
+            <h2 class="text-2xl font-semibold text-gray-700 mt-6 mb-4">Area de graficas</h2>
+
+            <div id="training-charts">
+                <label for="trained-chart">Datos utilizados para el entrenamiento</label>
+                <div id="trained-chart" style="width: 100%; height: 500px;"></div>
+            </div>
+            <div id="prediction-charts">
+                <label for="predicted-chart">Datos predecidos por el modelo</label>
+                <div id="predicted-chart" style="width: 100%; height: 500px;"></div>
+            </div>
+            <div id="tree-charts" style="display: none;">
+                <label for="tree">Arbol de decision predecido</label>
+                <div style="width: 100%; height: 500px; border: 2px dashed red; border-radius: 10px;" id="tree"></div>
+            </div>
+        </div>
+
+        <div id="canvas" style="display: none;">
+            <h2 class="text-2xl font-semibold text-gray-700 mt-6 mb-4">Area de canvas</h2>
+            <canvas id="kmeans-canva" width="600" height="600"></canvas>
+        </div>
     </div>
 
     <div style="display: none;">
@@ -272,9 +363,9 @@
                         linearRegressionModel.train(trainingXData, trainingYData);
 
                         document.getElementById("result").innerText =
-                            "Modelo entrenado con los siguientes datos:\n"
-                            + "XData: [" + trainingXData + "]\n"
-                            + "YData: [" + trainingYData + "]";
+                            "Modelo de tendencia lineal entrenado con los siguientes datos:\n"
+                            + "--- X: [" + trainingXData + "]\n"
+                            + "--- Y: [" + trainingYData + "]";
                     }
                     break;
                 case "polynomial":
@@ -296,9 +387,9 @@
                         fourGradePolynomialRegression.trainFourGradeRegression(trainingXData, trainingYData);
 
                         document.getElementById("result").innerText =
-                            "Modelo entrenado en base a polinomios de 2do, 3er y 4to grado con los siguientes datos:\n"
-                            + "XData: [" + trainingXData + "]\n"
-                            + "YData: [" + trainingYData + "]";
+                            "Modelo entrenado con tendencias en base a polinomios de 2do, 3er y 4to grado con los siguientes datos:\n"
+                            + "--- X: [" + trainingXData + "]\n"
+                            + "--- Y: [" + trainingYData + "]";
                     }
                     break;
                 case "decision":
@@ -369,9 +460,9 @@
                         const predictXData = xData.slice(maxTrainingIndex);
                         const yPredicted = linearRegressionModel.predict(predictXData);
                         document.getElementById("result").innerText =
-                            "Prediccion realizada:\n"
-                            + "provided  XData: [" + predictXData + "]\n"
-                            + "predicted YData: [" + yPredicted + "]";
+                            "Prediccion lineal realizada:\n"
+                            + "--- Variables de X proporcionadas: [" + predictXData + "]\n"
+                            + "--- Variables de Y predecidas: [" + yPredicted + "]";
                     }
                     break;
                 case "polynomial":
@@ -389,11 +480,11 @@
                         const yFourPredicted = fourGradePolynomialRegression.predict(predictXData);
 
                         document.getElementById("result").innerText =
-                            "Prediccion realizada:\n"
-                            + "provided  XData: [" + predictXData + "]\n"
-                            + "predicted 2th grade YData: [" + yTwoPredicted + "]\n"
-                            + "predicted 3th grade YData: [" + yThreePredicted + "]\n"
-                            + "predicted 4th grade YData: [" + yFourPredicted + "]";
+                            "Prediccion polinomial realizada:\n"
+                            + "--- Variables de X proporcionadas: [" + predictXData + "]\n"
+                            + "--- Variables de Y predecidas (2do grado): [" + yTwoPredicted + "]\n"
+                            + "--- Variables de Y predecidas (3er grado): [" + yThreePredicted + "]\n"
+                            + "--- Variables de Y predecidas (4to grado): [" + yFourPredicted + "]";
                     }
                     break;
                 case "decision":
@@ -546,6 +637,8 @@
         }
 
         function showResultChart() {
+            const graphicsArea = document.getElementById('graphics');
+            graphicsArea.style.display = 'block';
             const model = document.getElementById("model").value;
             const trainPercent = document.getElementById("train-percent").value;
             switch (model) {
@@ -562,8 +655,8 @@
                         if (!linearRegressionModel.predictXData || !linearRegressionModel.predictedYData) {
                             alert('No se ha realizado predicciones sobre el modelo previamente');
                         }
-                        configureChart('trained-chart', 'X', xData, 'Y', yData)
-                        configureChart('predicted-chart', 'X', linearRegressionModel.predictXData, 'Y', linearRegressionModel.predictedYData)
+                        configureChart('trained-chart', 'X', xData, 'X,Y', yData)
+                        configureChart('predicted-chart', 'X', linearRegressionModel.predictXData, 'X,Y', linearRegressionModel.predictedYData)
                     }
                     break;
                 case "polynomial":
@@ -1024,7 +1117,6 @@
             document.getElementById("neural-parameters").style.display = "none";
             document.getElementById("kmeans-parameters").style.display = "none";
             document.getElementById("knearest-parameters").style.display = "none";
-            document.getElementById('graphics').style.display = 'block';
         }
 
         function configureSlider() {
@@ -1073,7 +1165,9 @@
             const seleccion = select.value;
             const tabla = document.getElementById(modelName + "-table").getElementsByTagName('tbody')[0];
             const nuevaFila = tabla.insertRow();
+            nuevaFila.className = "border-t";
             const nuevaCelda = nuevaFila.insertCell(0);
+            nuevaCelda.className = "px-6 py-4 text-gray-600";
             nuevaCelda.textContent = seleccion;
             if (modelName === "bayes") {
                 updateSecondSelectItem();
@@ -1089,23 +1183,33 @@
                 case "bayes":
                     {
                         nuevaFila = tabla.insertRow();
+                        nuevaFila.className = "border-t";
                         nuevaCelda = nuevaFila.insertCell(0);
+                        nuevaCelda.className = "px-6 py-4 text-gray-600";
                         nuevaCelda.textContent = "clima";
 
                         nuevaFila = tabla.insertRow();
+                        nuevaFila.className = "border-t";
                         nuevaCelda = nuevaFila.insertCell(0);
+                        nuevaCelda.className = "px-6 py-4 text-gray-600";
                         nuevaCelda.textContent = "temperatura";
 
                         nuevaFila = tabla.insertRow();
+                        nuevaFila.className = "border-t";
                         nuevaCelda = nuevaFila.insertCell(0);
+                        nuevaCelda.className = "px-6 py-4 text-gray-600";
                         nuevaCelda.textContent = "humedad";
 
                         nuevaFila = tabla.insertRow();
+                        nuevaFila.className = "border-t";
                         nuevaCelda = nuevaFila.insertCell(0);
+                        nuevaCelda.className = "px-6 py-4 text-gray-600";
                         nuevaCelda.textContent = "viento";
 
                         nuevaFila = tabla.insertRow();
+                        nuevaFila.className = "border-t";
                         nuevaCelda = nuevaFila.insertCell(0);
+                        nuevaCelda.className = "px-6 py-4 text-gray-600";
                         nuevaCelda.textContent = "juega";
                     }
             }
@@ -1139,14 +1243,15 @@
                 console.log(uniqueColumnValues)
 
                 const nuevaFila = bayesVariablesTable.insertRow();
+                nuevaFila.className = "border-t";
                 const celdaNombre = nuevaFila.insertCell(0);
                 celdaNombre.id = 'select-variables-bayes-' + i;
-                celdaNombre.className = 'select-variables-bayes';
+                celdaNombre.className = 'select-variables-bayes px-6 py-4 text-gray-600';
                 celdaNombre.textContent = bayesTable[i].innerText;
 
                 let selectItem = document.createElement("select");
                 selectItem.id = 'select-values-bayes-' + i;
-                selectItem.className = 'select-values-bayes';
+                selectItem.className = 'select-values-bayes p-2 border border-gray-300 rounded-md w-full';
                 for (let j = 0; j < uniqueColumnValues.length; j++) {
                     let option = document.createElement("option");
                     option.value = uniqueColumnValues[j];
@@ -1155,6 +1260,7 @@
                 }
 
                 const nuevaCelda = nuevaFila.insertCell(1);
+                nuevaCelda.className = "px-6 py-4 text-gray-600";
                 nuevaCelda.appendChild(selectItem);
             }
         }
